@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" ng-app="mikiApp">
+  <head>
+    <meta charset="utf-8">
+    <title>miki</title>
+    <script src="/static/js/lib/angular.min.js"></script>
+    <script src="/static/js/lib/angular-route.min.js"></script>
+    <script src="/static/js/lib/angular-cookies.min.js"></script>
+    <script src="/static/js/lib/showdown.min.js"></script>
+    <script src="/static/js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
+    <!-- <script src="/static/js/lib/dialogs.min.js"></script> -->
+    <script src="/static/js/app/app.js"></script>
+    <script src="/static/js/app/controllers.js"></script>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <!-- <link href="/static/css/dialog.min.css" rel="stylesheet"/> -->
+    <link href="/static/css/miki.css" rel="stylesheet"/>
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#/">miki</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li ng-if="logged == true" ng-class="{active: location.path() == '/admin'}"><a href="#/admin"><span class="glyphicon glyphicon-cog"></span> Admin</a></li>
+            <li ng-if="can_create == true" ng-class="{active: location.path() == '/edit'}"><a href="#/edit"><span class="glyphicon glyphicon-file"></span> New page</a></li>
+            <li ng-if="can_edit == true"><a href="#/edit/{{page_name}}"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li ng-if="logged == false"><a href="" ng-click="login()"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+            <li ng-if="logged == true"><a href="" ng-click="logout()"><span class="glyphicon glyphicon-user"></span> Logout</a></li>
+            <li><a href="" ng-click="about()"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div ng-view></div>
+
+    <div class="footer">
+      <div class="container">
+        <p>
+        Powered by <a href="http://github.com/glejeune/miki">miki</a>, &copy; Grégoire Lejeune 2014 - {{can_edit}}
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
