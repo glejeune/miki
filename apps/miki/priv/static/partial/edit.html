@@ -8,8 +8,8 @@
       <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
       <form role="form">
         <div class="form-group">
-          <label ng-if="page_exist == false">Title</label>
-          <input class="form-control" placeholder="Enter page title" ng-model="page_title" ng-if="page_exist == false">
+          <label>Title</label>
+          <input class="form-control" placeholder="Enter page title" ng-model="page_title">
         </div>
         <div class="form-group">
           <label>Content</label>

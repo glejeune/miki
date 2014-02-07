@@ -1,7 +1,14 @@
 var mikiControllers = angular.module('mikiControllers', []); 
 
 mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $routeParams) {
-  $scope.page_content = "# 404 !!!\nPage **" + $routeParams.name + "** does not exist.";
+  $scope.page_content = "# Loading...";
+  if($routeParams.name) {
+    $http.get('/page/' + $routeParams.name, {cache: false}).success(function (data, status, headers, config) {
+      $scope.page_content = data;
+    }).error(function (data, status, headers, config) {
+      $scope.page_content = "# Error " + status +"\n\n```\n" + data + "\n```\n";
+    });
+  }
 
   $rootScope.can_edit = $rootScope.logged;
   $rootScope.can_create = $rootScope.logged;
@@ -11,12 +18,6 @@ mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $rou
   });
 
   $rootScope.page_name = $routeParams.name
-
-  if($routeParams.name) {
-    $http.get('/page/' + $routeParams.name, {cache: false}).success(function (data, status, headers, config) {
-      $scope.page_content = data;
-    });
-  }
 });
 
 mikiControllers.controller('AdminCtrl', function ($rootScope, $scope) {

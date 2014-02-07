@@ -5,10 +5,14 @@
   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
   <form role="form">
     <div class="form-group">
-      <label >Username</label>
-      <input class="form-control" placeholder="Enter your username" ng-model="user_login">
-      <label >Password</label>
-      <input type="password" class="form-control" placeholder="Enter your password" ng-model="user_password">
+      <p class="input-group">
+        <label >Username</label>
+        <input class="form-control" placeholder="Enter your username" ng-model="user_login">
+      </p>
+      <p class="input-group">
+        <label >Password</label>
+        <input type="password" class="form-control" placeholder="Enter your password" ng-model="user_password">
+      </p>
     </div>
   </form>
 </div>
