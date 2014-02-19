@@ -39,6 +39,9 @@ content_types_provided(Req, State) ->
       {{<<"*">>, <<"*">>, '*'}, to_txt}
   ], Req, State}.
 
+% POST /page
+% INPUT : {"title": Title, "content", Content}
+% OUTPUT : {"ok", Title} | {"error": Message}
 from_json(Req, State) ->
   {ok, Data, _} = cowboy_req:body(Req),
   JSON = jsx:decode(Data),
@@ -47,9 +50,10 @@ from_json(Req, State) ->
   File = filename:join([code:priv_dir(miki), "pages", binary_to_list(Filename)]),
   file:write_file(list_to_binary(File), Content),
   lager:info("Save page to ~p", [File]),
-  Req2 = cowboy_req:set_resp_body("", Req),
+  Req2 = cowboy_req:set_resp_body(jsx:encode([{ok, Filename}]), Req),
   {true, Req2, State}.
 
+% GET /page/:page
 to_txt(Req, {page, Page} = State) ->
   File = filename:join([code:priv_dir(miki), "pages", Page]),
   lager:info("Send page ~p", [File]),

@@ -13,7 +13,9 @@
   update_password/3,
   get_token/2,
   is_token_valid/1,
-  count/0
+  count/0,
+  all_users/0,
+  delete_user/1
 ]).
 
 %% ------------------------------------------------------------------
@@ -45,6 +47,12 @@ is_token_valid(Token) ->
 count() ->
   gen_server:call(?SERVER, {count}).
 
+all_users() ->
+  gen_server:call(?SERVER, {all_users}).
+
+delete_user(Username) ->
+  gen_server:call(?SERVER, {delete_user, Username}).
+
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
@@ -75,9 +83,21 @@ handle_call({update_password, Username, OldPassword, NewPassword}, _From, #miki{
     ok -> 
       ets:delete_object(Users, {Username, OldPassword}),
       ets:insert(Users, {Username, NewPassword}),
+      File = filename:join([code:priv_dir(miki), "db", "users.db"]),
+      ets:tab2file(Users, File),
       {ok, Username};
     Err -> 
       {error, Err}
+  end,
+  {reply, Result, State};
+handle_call({delete_user, Username}, _From, #miki{users = Users} = State) ->
+  Result = case find_user(Users, Username) of
+    user_not_found -> user_not_found;
+    Password -> 
+      ets:delete_object(Users, {Username, Password}),
+      File = filename:join([code:priv_dir(miki), "db", "users.db"]),
+      ets:tab2file(Users, File),
+      ok
   end,
   {reply, Result, State};
 handle_call({get_token, Username, Password}, _From, #miki{users = Users, tokens = Tokens} = State) ->
@@ -95,6 +115,8 @@ handle_call({is_token_valid, Token}, _From, #miki{tokens = Tokens} = State) ->
   {reply, find_token(Tokens, Token), State};
 handle_call({count}, _From, #miki{users = Users} = State) ->
   {reply, ets:info(Users, size), State};
+handle_call({all_users}, _From, #miki{users = Users} = State) ->
+  {reply, ets:tab2list(Users), State};
 handle_call(_Request, _From, State) ->
   {reply, ok, State}.
 
@@ -128,6 +150,12 @@ find_user(Users, Username, Password) ->
   case ets:match(Users, {Username, '$1'}) of
     [[Password]] -> ok;
     [_] -> invalid_password;
+    [] -> user_not_found
+  end.
+
+find_user(Users, Username) ->
+  case ets:match(Users, {Username, '$1'}) of
+    [[Password]] -> Password;
     [] -> user_not_found
   end.
 

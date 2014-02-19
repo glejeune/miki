@@ -20,7 +20,10 @@ mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $rou
   $rootScope.page_name = $routeParams.name
 });
 
-mikiControllers.controller('AdminCtrl', function ($rootScope, $scope) {
+mikiControllers.controller('AdminCtrl', function ($rootScope, $scope, $location) {
+  if($rootScope.logged == false) {
+    $location.path("/");
+  }
   $rootScope.can_edit = false;
   $rootScope.can_create = $rootScope.logged;
 });

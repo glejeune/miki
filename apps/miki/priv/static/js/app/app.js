@@ -8,6 +8,7 @@ var mikiApp = angular.module('mikiApp', [
   $rootScope.$watch(function() { return $cookieStore.get('token'); }, function(newValue) {
     // TODO verify token
     $rootScope.logged = ($cookieStore.get('token') != undefined);
+    $rootScope.token = $cookieStore.get('token');
   });
 
   $rootScope.can_edit = false;
