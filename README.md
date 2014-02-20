@@ -2,10 +2,11 @@
 
 **miki** is a small wiki with small features :
 
-* we do not track pages' changes.
-* we do not store user informations on pages
+* We do not track pages' changes.
+* We do not store user informations on pages.
+* Every user is admin -- because sharing is a question of confidence.
 * Each page is formated using [Markdown](http://daringfireball.net/projects/markdown/) -- no more, no less.
-* We do not support attachment, images, ... Except if you use them from external links
+* We do not support attachment, images, ... Except if you use them from external links.
 * There is no database, each page is store in a file on the server.
 * **But** we have a REST API \o/
 
