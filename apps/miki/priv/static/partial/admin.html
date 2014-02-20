@@ -3,5 +3,51 @@
 </div>
 
 <div class="container">
-  [{{a}}]
+  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Users</h3>
+      <table class="table">
+        <tr ng-repeat="user in users"><td>{{user}}</td><td style="text-align: right;"><span class="glyphicon glyphicon-remove" ng-click="delete_user(user)" style="cursor: pointer;"></span></td></tr>
+      </table>
+      <h3>Pages</h3>
+      <table class="table">
+        <tr ng-repeat="page in pages"><td><a href="#/page/{{page}}">{{page}}</a></td><td style="text-align: right;"><span class="glyphicon glyphicon-remove" ng-click="delete_page(page)" style="cursor: pointer;"></span></td></tr>
+      </table>
+    </div>
+    <div class="col-md-6">
+      <h3>Change my password</h3>
+      <form role="form">
+        <div class="form-group">
+          <p class="input-group" style="width: 100%;">
+          <label >Current password</label>
+          <input type="password" class="form-control" placeholder="Enter current password" ng-model="old_password">
+          </p>
+          <p class="input-group" style="width: 100%;">
+          <label >New password</label>
+          <input type="password" class="form-control" placeholder="Enter new password" ng-model="new_password">
+          </p>
+          <p class="input-group">
+          <button type="submit" class="btn btn-success" ng-click="change_password()">Change</button>
+          </p>
+        </div>
+      </form>
+      <h3>New user</h3>
+      <form role="form">
+        <div class="form-group">
+          <p class="input-group" style="width: 100%;">
+          <label >Username</label>
+          <input class="form-control" placeholder="Enter username" ng-model="user_login">
+          </p>
+          <p class="input-group" style="width: 100%;">
+          <label >Password</label>
+          <input type="password" class="form-control" placeholder="Enter password" ng-model="user_password">
+          </p>
+          <p class="input-group">
+          <button type="submit" class="btn btn-success" ng-click="add_user()">Add</button>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

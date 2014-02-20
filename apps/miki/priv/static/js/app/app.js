@@ -2,7 +2,7 @@ var mikiApp = angular.module('mikiApp', [
   'ngCookies',
   'ngRoute',
   'ui.bootstrap',
-  'mikiControllers' 
+  'mikiControllers'
 ]).run(function($rootScope, $modal, $http, $cookieStore) {
   $rootScope.logged = ($cookieStore.get('token') != undefined);
   $rootScope.$watch(function() { return $cookieStore.get('token'); }, function(newValue) {

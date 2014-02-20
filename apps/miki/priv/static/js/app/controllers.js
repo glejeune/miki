@@ -3,10 +3,10 @@ var mikiControllers = angular.module('mikiControllers', []);
 mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $routeParams) {
   $scope.page_content = "# Loading...";
   if($routeParams.name) {
-    $http.get('/page/' + $routeParams.name, {cache: false}).success(function (data, status, headers, config) {
+    $http.get('/pages/' + $routeParams.name, {cache: false}).success(function (data, status, headers, config) {
       $scope.page_content = data;
     }).error(function (data, status, headers, config) {
-      $scope.page_content = "# Error " + status +"\n\n```\n" + data + "\n```\n";
+      $scope.page_content = "# Error " + status;
     });
   }
 
@@ -20,12 +20,117 @@ mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $rou
   $rootScope.page_name = $routeParams.name
 });
 
-mikiControllers.controller('AdminCtrl', function ($rootScope, $scope, $location) {
+mikiControllers.controller('AdminCtrl', function ($rootScope, $scope, $location, $http) {
   if($rootScope.logged == false) {
     $location.path("/");
   }
   $rootScope.can_edit = false;
   $rootScope.can_create = $rootScope.logged;
+
+  $scope.alerts = [];
+  $scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
+
+  function get_user_list() {
+    $http.get('/users', {cache: false}).success(function (data, status, headers, config) {
+      $scope.users = data;
+    }).error(function(data, status, headers, config) {
+      $scope.users = [];
+      $scope.alerts = [{type: 'danger', msg: "Can't retrieve user list!"}];
+    });
+  }
+  get_user_list();
+
+  function get_page_list() {
+    $http.get('/pages', {cache: false}).success(function (data, status, headers, config) {
+      $scope.pages = data;
+    }).error(function(data, status, headers, config) {
+      $scope.pages = [];
+      $scope.alerts = [{type: 'danger', msg: "Can't retrieve page list!"}];
+    });
+  }
+  get_page_list();
+
+  $scope.delete_user = function(username) {
+    $http({
+      url: '/users/' + username + '/' + $rootScope.token,
+      method: "DELETE"
+    }).success(function(response) {
+      $scope.alerts = [{type: 'success', msg: "User "+username+" removed!"}];
+      get_user_list();
+    }).error(function(response) {
+      $scope.alerts = [{type: 'danger', msg: "Can't remove user "+username+"!"}];
+    });
+  };
+
+  $scope.change_password = function() {
+    old_password = $scope.old_password;
+    new_password = $scope.new_password;
+
+    if(old_password == undefined || old_password == '' || new_password == undefined || new_password == '') {
+      $scope.alerts = [{type: 'danger', msg: "Enter old and new password!"}];
+      return;
+    }
+
+    $http.get("/users/" + $rootScope.token).success(function(data, status, headers, config){
+      change_data = { 
+        "username": data.ok, "password": old_password, 
+        "new_password": new_password, "action": "new_password" 
+      };
+
+      $http({
+        url: "/users",
+        method: "PUT",
+        data: change_data,
+        headers: {'Content-Type': 'application/json'}
+      }).success(function(response) {
+        $scope.old_password = "";
+        $scope.new_password = "";
+        $scope.alerts = [{type: 'success', msg: "Password successfully changed!"}];
+      }).error(function(response) {
+        $scope.alerts = [{type: 'danger', msg: "Failed to change your password!"}];
+      });
+    }).error(function(response) {
+      $scope.alerts = [{type: 'danger', msg: "Failed to change your password!"}];
+    });
+  };
+
+  $scope.add_user = function() {
+    username = $scope.user_login;
+    password = $scope.user_password;
+
+    if(username == undefined || username == '' || password == undefined || password == '') {
+      $scope.alerts = [{type: 'danger', msg: "Enter a username and password to create a new user!"}];
+      return;
+    }
+
+    $http({
+      url: '/users',
+      method: "POST",
+      data: { "username": username, "password": password, "token": $rootScope.token },
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(response) {
+      $scope.user_login = "";
+      $scope.user_password = "";
+      $scope.alerts = [{type: 'success', msg: "User "+username+" added!"}];
+      get_user_list();
+    }).error(function(response) {
+      $scope.alerts = [{type: 'danger', msg: "Faild to add user!"}];
+    });
+  };
+
+  $scope.delete_page = function(page) {
+    $http({
+      url: '/pages/' + page + '/' + $rootScope.token,
+      method: "DELETE"
+    }).success(function(response) {
+      $scope.alerts = [{type: 'success', msg: "Page "+page+" removed!"}];
+      get_page_list();
+    }).error(function(response) {
+      $scope.alerts = [{type: 'danger', msg: "Can't remove page "+page+"!"}];
+    });
+  };
 });
 
 mikiControllers.controller('EditCtrl', function ($rootScope, $scope, $location, $http, $routeParams) {
@@ -42,7 +147,7 @@ mikiControllers.controller('EditCtrl', function ($rootScope, $scope, $location, 
 
   if($routeParams.name) {
     $scope.page_title = $routeParams.name;
-    $http.get('/page/' + $scope.page_title, {cache: false}).success(function (data, status, headers, config) {
+    $http.get('/pages/' + $scope.page_title, {cache: false}).success(function (data, status, headers, config) {
       $scope.page_content = data;
       $scope.page_exist = true;
     }).error(function(data, status, headers, config) {
@@ -70,9 +175,9 @@ mikiControllers.controller('EditCtrl', function ($rootScope, $scope, $location, 
 
   $scope.save = function(view) {
     $http({
-      url: '/page',
+      url: '/pages',
       method: "POST",
-      data: { "title": $scope.page_title, "content": $scope.page_content },
+      data: { "title": $scope.page_title, "content": $scope.page_content, "token": $rootScope.token },
       headers: {'Content-Type': 'application/json'}
     }).success(function(response) {
       if(view === true) {
@@ -109,10 +214,10 @@ var LoginCtrl = function($scope, $modalInstance, $cookieStore, $http) {
         $cookieStore.put('token', data.ok); 
         $modalInstance.close();
       } else {
-        $scope.alerts = [{type: 'danger', msg: "Login faild ("+data.error+")!"}];
+        $scope.alerts = [{type: 'danger', msg: "Login faild!"}];
       }
     }).error(function(response) {
-      $scope.alerts = [{type: 'danger', msg: "Server error!"}];
+      $scope.alerts = [{type: 'danger', msg: "Login faild!"}];
     });
   };
   $scope.cancel = function () {

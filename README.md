@@ -19,6 +19,182 @@
 
 ## APIs
 
+### GET /users
+
+List all users
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+["greg", "muriel"]
+```
+
+### GET /users/{token}
+
+Return the single user for a given token
+
+_Parameters :_
+
+* `token` :: _string_ - String token of a user.
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+{ "ok": "greg" }
+```
+
+### POST /users
+
+Create a new user
+
+_Request :_
+
+```
+Content-Type: application/json
+
+{ "username": Username, "password": Password, "token": MyToken }
+```
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+{ "ok": Username }
+```
+
+### DELETE /users/{username}/{token}
+
+Delete user
+
+_Parameters :_
+
+* `username` :: _string_ - String name of the user to delete
+* `token` :: _string_ - String token.
+
+_Response :_
+
+```
+204 (No Content)
+```
+
+### PUT /users
+
+#### Get token
+
+_Request :_
+
+```
+Content-Type: application/json
+
+{ "username": Username, "password": Password, "action": "new_token" }
+```
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+{ "ok": Token }
+```
+
+#### Change password
+
+_Request :_
+
+```
+Content-Type: application/json
+
+{ 
+  "username": Username, "password": Password, 
+  "new_password": NewPassword, "action": "new_password" 
+}
+```
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+{ "ok": Username }
+```
+
+### GET /pages
+
+Liste pages
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+[ "index", "about" ]
+```
+
+### GET /pages/{page}
+
+_Parameters :_
+
+* `page` :: _string_ - String name of the page
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: text/plain
+
+# Hello mu
+
+[index](#/page/index)
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+Mauris vitae lectus vel neque mattis sodales. 
+```
+
+### POST /pages
+
+_Request :_
+
+```
+Content-Type: application/json
+
+{ "title": Title, "content": Content, "token": Token }
+```
+
+_Response :_
+
+```
+200 (OK)
+Content-Type: application/json
+
+{ "ok": Title }
+```
+
+### DELETE /pages/{page}/{token}
+
+Delete page
+
+_Parameters :_
+
+* `page` :: _string_ - String name of the page to delete
+* `token` :: _string_ - String token.
+
+_Response :_
+
+```
+204 (No Content)
+```
+
 ## Licence
 
 miki is available for use under the following license, commonly known as the 3-clause (or "modified") BSD license:
