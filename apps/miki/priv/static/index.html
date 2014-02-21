@@ -33,17 +33,28 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#/">miki</a>
+          <a class="navbar-brand" href="#/"><span class="glyphicon glyphicon-home"></span></a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li ng-class="{active: location.path() == '/page'}"><a href="#/page"><span class="glyphicon glyphicon-book"></span> Pages</a></li>
             <li ng-if="logged == true" ng-class="{active: location.path() == '/admin'}"><a href="#/admin"><span class="glyphicon glyphicon-cog"></span> Admin</a></li>
             <li ng-if="can_create == true" ng-class="{active: location.path() == '/edit'}"><a href="#/edit"><span class="glyphicon glyphicon-file"></span> New page</a></li>
             <li ng-if="can_edit == true"><a href="#/edit/{{page_name}}"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
           </ul>
+          <!-- TODO
+          <form class="navbar-form navbar-right" role="form">
+            <div class="input-group">
+              <input type="text" placeholder="Search" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-info" ng-click="open($event)"><i class="glyphicon glyphicon-search"></i></button>
+              </span>
+            </div>
+          </form>
+          -->
           <ul class="nav navbar-nav navbar-right">
-            <li ng-if="logged == false"><a href="" ng-click="login()"><span class="glyphicon glyphicon-user"></span> Login</a></li>
-            <li ng-if="logged == true"><a href="" ng-click="logout()"><span class="glyphicon glyphicon-user"></span> Logout</a></li>
+            <li ng-if="logged == false"><a href="" ng-click="login()"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li ng-if="logged == true"><a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             <li><a href="" ng-click="about()"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
           </ul>
         </div><!--/.nav-collapse -->

@@ -12,7 +12,7 @@
       </table>
       <h3>Pages</h3>
       <table class="table">
-        <tr ng-repeat="page in pages"><td><a href="#/page/{{page}}">{{page}}</a></td><td style="text-align: right;"><span class="glyphicon glyphicon-remove" ng-click="delete_page(page)" style="cursor: pointer;"></span></td></tr>
+        <tr ng-repeat="page in pages"><td><a href="#/page/{{page.file}}">{{page.file}}</a></td><td>{{page.date}}</td><td style="text-align: right;"><span class="glyphicon glyphicon-remove" ng-click="delete_page(page.file)" style="cursor: pointer;"></span></td></tr>
       </table>
     </div>
     <div class="col-md-6">

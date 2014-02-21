@@ -139,7 +139,10 @@ _Response :_
 200 (OK)
 Content-Type: application/json
 
-[ "index", "about" ]
+[ 
+  {"file": "index", "date": "2014-02-07 20:54:05"}, 
+  {"file": "about", "date", "2014-02-07 21:09:34"} 
+]
 ```
 
 ### GET /pages/{page}

@@ -3,7 +3,7 @@ var mikiApp = angular.module('mikiApp', [
   'ngRoute',
   'ui.bootstrap',
   'mikiControllers'
-]).run(function($rootScope, $modal, $http, $cookieStore) {
+]).run(function($rootScope, $modal, $http, $cookieStore, appStatus) {
   $rootScope.logged = ($cookieStore.get('token') != undefined);
   $rootScope.$watch(function() { return $cookieStore.get('token'); }, function(newValue) {
     // TODO verify token
@@ -38,16 +38,15 @@ var mikiApp = angular.module('mikiApp', [
 
   $rootScope.logout = function() {
     $cookieStore.remove('token');
-  }
-});
+  };
 
-mikiApp.directive('markdown', function () {
-  var converter = new Showdown.converter();
+  $rootScope.$on('$routeChangeSuccess', function () {
+    appStatus.check($rootScope);
+  })
+}).factory('appStatus', function($cookieStore, $http){
   return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
-      var htmlText = converter.makeHtml(element.text());
-      element.html(htmlText);
+    check: function(scope) {
+      // console.log("checkAppStatus");
     }
   };
 });
@@ -73,6 +72,10 @@ mikiApp.directive('ngMarkdown', function () {
 mikiApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
+    when('/page', {
+      templateUrl: '/static/partial/page_list.html',
+      controller: 'PageListCtrl'
+    }).
     when('/page/:name', {
       templateUrl: '/static/partial/page.html',
       controller: 'PageCtrl'

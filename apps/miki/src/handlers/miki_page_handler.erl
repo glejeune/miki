@@ -80,7 +80,16 @@ do_get(Req, {page, PageRequest} = State) ->
     list ->
       Dir = filename:join([code:priv_dir(miki), "pages"]),
       FileList = case file:list_dir(Dir) of
-        {ok, Filenames} -> lists:map(fun(E) -> list_to_binary(E) end, Filenames);
+        {ok, Filenames} -> lists:foldl(fun(E, Acc) -> 
+                Date = case filelib:last_modified(filename:join(Dir, E)) of
+                  {{Y, M, D}, {HH, MM, SS}} -> list_to_binary(
+                      io_lib:format(
+                        "~4.10.0B-~2.10.0B-~2.10.0B ~2.10.0B:~2.10.0B:~2.10.0B",
+                        [Y, M, D, HH, MM, SS]));
+                  0 -> ""
+                end,
+                Acc ++ [[{file, list_to_binary(E)}, {date, Date}]]
+            end, [], Filenames);
         _ -> []
       end,
       Req4 = cowboy_req:set_resp_header("Content-Type", "application/json", Req),

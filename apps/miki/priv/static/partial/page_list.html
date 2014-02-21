@@ -1,0 +1,16 @@
+<div class="jumbotron">
+  <div class="container"><h2>Pages</h2></div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4" ng-repeat="pagelist in pages">
+      <table class="table">
+        <tr ng-repeat="page in pagelist">
+          <td><a href="#/page/{{page.file}}">{{page.file}}</a></td>
+          <td style="text-align: right;">{{page.date}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -20,12 +20,40 @@ mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $rou
   $rootScope.page_name = $routeParams.name
 });
 
+mikiControllers.controller('PageListCtrl', function ($rootScope, $scope, $http) {
+  $rootScope.can_edit = false;
+  $rootScope.can_create = $rootScope.logged;
+
+  $http.get('/pages', {cache: false}).success(function (data, status, headers, config) {
+    $scope.pages = [];
+    div = 3;
+    len = data.length;
+    i = 0;
+    do {
+      current = i % div;
+      if($scope.pages[current] == undefined) {
+        $scope.pages[current] = [];
+      }
+      $scope.pages[current].push(data[i]);
+    } while(i++ < len);
+  }).error(function(data, status, headers, config) {
+    $scope.pages = [];
+    $scope.alerts = [{type: 'danger', msg: "Can't retrieve page list!"}];
+  });
+});
+
 mikiControllers.controller('AdminCtrl', function ($rootScope, $scope, $location, $http) {
   if($rootScope.logged == false) {
     $location.path("/");
   }
   $rootScope.can_edit = false;
   $rootScope.can_create = $rootScope.logged;
+
+  $scope.$watch(function() { return $rootScope.logged; }, function(newValue) {
+    if(newValue == false) {
+      $location.path("/");
+    }
+  });
 
   $scope.alerts = [];
   $scope.closeAlert = function(index) {
@@ -45,6 +73,7 @@ mikiControllers.controller('AdminCtrl', function ($rootScope, $scope, $location,
   function get_page_list() {
     $http.get('/pages', {cache: false}).success(function (data, status, headers, config) {
       $scope.pages = data;
+      console.log($scope.pages);
     }).error(function(data, status, headers, config) {
       $scope.pages = [];
       $scope.alerts = [{type: 'danger', msg: "Can't retrieve page list!"}];
@@ -184,6 +213,7 @@ mikiControllers.controller('EditCtrl', function ($rootScope, $scope, $location, 
         $location.path("/page/" + $scope.page_title);
       } else {
         $scope.alerts = [{type: 'success', msg: "Page saved!"}];
+        $scope.page_exist = true;
       }
     }).error(function(response) {
       $scope.alerts = [{type: 'danger', msg: "Faild to save page!"}];
