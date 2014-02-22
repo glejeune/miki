@@ -23,7 +23,7 @@ start(_StartType, _StartArgs) ->
   TransOpts   = [{port, Port}],
   ProtoOpts   = [ {env, [{dispatch, Dispatch}]} ],
   {ok, _}     = cowboy:start_http(http, MaxConn, TransOpts, ProtoOpts),
-  lager:info("Billing server started on port ~p (~p)", [Port, code:priv_dir(miki)]),
+  lager:info("miki server started on port ~p (~p)", [Port, code:priv_dir(miki)]),
   miki_sup:start_link().
 
 stop(_State) ->
@@ -36,6 +36,7 @@ routes() ->
   [
     {'_', [
       {"/", miki_handler, []},
+      {"/config", miki_config_handler, []},
       {"/pages/[...]", miki_page_handler, []},
       {"/users", miki_user_handler, []},
       {"/users/:token", miki_user_handler, []},

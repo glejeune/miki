@@ -2,6 +2,7 @@
 -behaviour(gen_server).
 -include("../include/miki.hrl").
 -define(SERVER, ?MODULE).
+-define(DEFAULT_KEY, "d3f4ulTK3y").
 
 %% ------------------------------------------------------------------
 %% API Function Exports
@@ -15,7 +16,8 @@
   is_token_valid/1,
   count/0,
   all_users/0,
-  delete_user/1
+  delete_user/1,
+  hash_password/1
 ]).
 
 %% ------------------------------------------------------------------
@@ -70,7 +72,7 @@ init(_Args) ->
 handle_call({add_user, Username, Password}, _From, #miki{users = Users} = State) ->
   Result = case find_user(Users, Username, Password) of
     user_not_found -> 
-      ets:insert(Users, {Username, Password}),
+      ets:insert(Users, {Username, hash_password(Password)}),
       File = filename:join([code:priv_dir(miki), "db", "users.db"]),
       ets:tab2file(Users, File),
       {ok, Username};
@@ -81,8 +83,8 @@ handle_call({add_user, Username, Password}, _From, #miki{users = Users} = State)
 handle_call({update_password, Username, OldPassword, NewPassword}, _From, #miki{users = Users} = State) ->
   Result = case find_user(Users, Username, OldPassword) of
     ok -> 
-      ets:delete_object(Users, {Username, OldPassword}),
-      ets:insert(Users, {Username, NewPassword}),
+      ets:delete_object(Users, {Username, hash_password(OldPassword)}),
+      ets:insert(Users, {Username, hash_password(NewPassword)}),
       File = filename:join([code:priv_dir(miki), "db", "users.db"]),
       ets:tab2file(Users, File),
       {ok, Username};
@@ -147,8 +149,9 @@ code_change(_OldVsn, State, _Extra) ->
 %% ------------------------------------------------------------------
 
 find_user(Users, Username, Password) ->
+  HashPassword = hash_password(Password),
   case ets:match(Users, {Username, '$1'}) of
-    [[Password]] -> ok;
+    [[HashPassword]] -> ok;
     [_] -> invalid_password;
     [] -> user_not_found
   end.
@@ -176,3 +179,9 @@ now_sec() ->
   Nowish = calendar:now_to_universal_time(Now),
   calendar:datetime_to_gregorian_seconds(Nowish).
 
+hash_password(Password) ->
+  Key = case application:get_env(miki, key) of
+    {ok, K} -> K;
+    _ -> ?DEFAULT_KEY
+  end,
+  crypto:hmac(sha512, Key, Password).

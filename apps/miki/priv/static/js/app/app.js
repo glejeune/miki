@@ -43,10 +43,14 @@ var mikiApp = angular.module('mikiApp', [
   $rootScope.$on('$routeChangeSuccess', function () {
     appStatus.check($rootScope);
   })
-}).factory('appStatus', function($cookieStore, $http){
+}).factory('appStatus', function($cookieStore, $http, $window){
   return {
     check: function(scope) {
-      // console.log("checkAppStatus");
+      $http.get('/users', {cache: false}).success(function (data, status, headers, config) {
+        if(data.length === 0) {
+          $window.location.href = "/config";
+        }
+      });
     }
   };
 });
