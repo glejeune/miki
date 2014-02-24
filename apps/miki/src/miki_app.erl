@@ -14,13 +14,19 @@ start(_StartType, _StartArgs) ->
     {ok, P} -> P;
     _ -> 8080
   end,
+  IP = case application:get_env(miki, ip) of
+    {ok, I} -> 
+      [A, B, C, D] = [list_to_integer(X) || X <- string:tokens(I, ".")],
+      {A, B, C, D};
+    _ -> {0, 0, 0, 0}
+  end,
   MaxConn = case application:get_env(miki, max_conn) of 
     {ok, MC} -> MC;
     _ -> 100
   end,
   Routes      = routes(),
   Dispatch    = cowboy_router:compile(Routes),
-  TransOpts   = [{port, Port}],
+  TransOpts   = [{port, Port}, {ip, IP}],
   ProtoOpts   = [ {env, [{dispatch, Dispatch}]} ],
   {ok, _}     = cowboy:start_http(http, MaxConn, TransOpts, ProtoOpts),
   lager:info("miki server started on port ~p (~p)", [Port, code:priv_dir(miki)]),

@@ -28,9 +28,29 @@
 
 * [erlang](http://www.erlang.org)
 
-### Configuration
+### Using development version
+
+```
+git clone https://github.com/glejeune/miki.git
+cd miki
+make
+./start.sh
+```
+
+### Using compiled version
 
 TBA
+
+### Configuration
+
+If you use the development version, the configuration file is `apps/miki.config`. If you use the compiled version, the configuration file is `releases/1/sys.config`.
+
+Miki parameters :
+
+* `port` : TCP port number to listen on (default : `8080`)
+* `ip` : Interface to listen on (default : `0.0.0.0`)
+* `max_conn` : Paximum concurrent connections (default : `100`)
+* `key` : salt for password hashing
 
 ## APIs
 

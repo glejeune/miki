@@ -1,8 +1,8 @@
 ## Name of the node
-## -name miki@127.0.0.1
+-name miki@127.0.0.1
 
 ## Cookie for distributed erlang
-## -setcookie miki
+-setcookie miki
 
 ## Heartbeat management; auto-restarts VM if it dies or becomes unresponsive
 ## (Disabled by default..use with caution!)
