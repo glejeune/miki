@@ -56,17 +56,29 @@ var mikiApp = angular.module('mikiApp', [
 });
 
 mikiApp.directive('ngMarkdown', function () {
-  var converter = new Showdown.converter();
+  marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: true,
+    smartLists: true,
+    smartypants: false,
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
+    }
+  });
   return {
     restrict: 'AE',
     link: function (scope, element, attrs) {
       if (attrs.ngMarkdown) {
         scope.$watch(attrs.ngMarkdown, function (newVal) {
-          var html = newVal ? converter.makeHtml(newVal) : '';
+          var html = newVal ? marked(newVal) : '';
           element.html(html);
         });
       } else {
-        var html = converter.makeHtml(element.text());
+        var html = marked(element.text());
         element.html(html);
       }
     }

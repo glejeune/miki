@@ -10,6 +10,18 @@
 * There is no database, each page is store in a file on the server.
 * **But** we have a REST API \o/
 
+## About
+
+**miki** is developed with:
+
+* [Erlang](http://www.erlang.org/)
+* [Cowboy](http://ninenines.eu/)
+* [lager](https://github.com/basho/lager)
+* [jsx](https://github.com/talentdeficit/jsx)
+* [AngularJS](http://angularjs.org/)
+* [highlight.js](http://highlightjs.org/)
+* [marked](https://github.com/chjj/marked)
+
 ## Installation
 
 ### Requirements 
