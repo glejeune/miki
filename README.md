@@ -49,7 +49,7 @@ Miki parameters :
 
 * `port` : TCP port number to listen on (default : `8080`)
 * `ip` : Interface to listen on (default : `0.0.0.0`)
-* `max_conn` : Paximum concurrent connections (default : `100`)
+* `max_conn` : Maximum concurrent connections (default : `100`)
 * `key` : salt for password hashing
 
 ## APIs
