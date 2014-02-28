@@ -1,12 +1,28 @@
 var mikiControllers = angular.module('mikiControllers', []); 
 
+mikiControllers.controller('IndexCtrl', function ($scope, $http, $location) {
+  $scope.page_content = "# Loading...";
+  $http.get('/index', {cache: false}).success(function (data, status, headers, config) {
+    $location.path(data);
+  }).error(function(data, status, header, config) {
+    console.log("/page");
+  });
+});
+
 mikiControllers.controller('PageCtrl', function ($rootScope, $scope, $http, $routeParams) {
   $scope.page_content = "# Loading...";
   if($routeParams.name) {
     $http.get('/pages/' + $routeParams.name, {cache: false}).success(function (data, status, headers, config) {
       $scope.page_content = data;
     }).error(function (data, status, headers, config) {
-      $scope.page_content = "# Error " + status;
+      var error_status = status;
+      $http.get('/pages/' + status, {cache: false}).success(function (data, status, headers, config) {
+        var reg_page = new RegExp("{{ *page *}}", "g");
+        var reg_error = new RegExp("{{ *error *}}", "g");
+        $scope.page_content = data.replace(reg_page, $routeParams.name).replace(reg_error, error_status);
+      }).error(function (data, status, headers, config) {
+        $scope.page_content = "# Error " + error_status + "\n\nThe page \"**" + $routeParams.name + "**\" does not exist, or has been moved. Please go to the [list of pages](#/page) to see if you can found the page you are looking for...";
+      });
     });
   }
 

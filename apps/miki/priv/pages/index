@@ -1,13 +1,27 @@
-# Welcome
+# miki
 
 **miki** is a small wiki with small features :
 
-* we do not track pages' changes.
-* we do not store user informations on pages
+* We do not track pages' changes.
+* We do not store user informations on pages.
+* Every user is admin -- because sharing is a question of confidence.
 * Each page is formated using [Markdown](http://daringfireball.net/projects/markdown/) -- no more, no less.
-* We do not support attachment, images, ... Except if you use them from external links
+* We do not support attachment, images, ... Except if you use them from external links.
 * There is no database, each page is store in a file on the server.
 * **But** we have a REST API \o/
+
+## About
+
+**miki** is developed with:
+
+* [Erlang](http://www.erlang.org/)
+* [Cowboy](http://ninenines.eu/)
+* [lager](https://github.com/basho/lager)
+* [jsx](https://github.com/talentdeficit/jsx)
+* [AngularJS](http://angularjs.org/)
+* [highlight.js](http://highlightjs.org/)
+* [marked](https://github.com/chjj/marked)
+* [bootstrap](http://getbootstrap.com/)
 
 ## Installation
 
@@ -15,7 +29,42 @@
 
 * [erlang](http://www.erlang.org)
 
+### Using development version
+
+```
+git clone https://github.com/glejeune/miki.git
+cd miki
+make
+./start.sh
+```
+
+### Using compiled version
+
+TBA
+
 ### Configuration
+
+If you use the development version, the configuration file is `apps/miki.config`. If you use the compiled version, the configuration file is `releases/1/sys.config`.
+
+Miki parameters :
+
+* `port` : TCP port number to listen on (default : `8080`)
+* `ip` : Interface to listen on (default : `0.0.0.0`)
+* `max_conn` : Maximum concurrent connections (default : `100`)
+* `key` : salt for password hashing
+* `index` : Name of the default (index) page. If this value is empty (default) the index page return the list of availables pages in the wiki.
+
+## Customize
+
+### 404, 500, ... pages
+
+You can customize your error page. To do so, create a page with name the error code. In such a page, you can use `{{page}}` and `{{error}}` which will be replaced by the desired page and the HTTP error code.
+
+### CSS
+
+**miki** use [bootstrap](http://getbootstrap.com/). Thus, you can use any bootstrap' theme you want. Just replace the CSS in the `index.html` file located in the `static` directory. 
+
+You can find many bootstrap' themes [here](http://bootswatch.com/). The default miki theme is [Journal](http://bootswatch.com/journal/). [Amelia](http://bootswatch.com/amelia/) is also present.
 
 ## APIs
 
@@ -138,7 +187,10 @@ _Response :_
 200 (OK)
 Content-Type: application/json
 
-[ "index", "about" ]
+[ 
+  {"file": "index", "date": "2014-02-07 20:54:05"}, 
+  {"file": "about", "date", "2014-02-07 21:09:34"} 
+]
 ```
 
 ### GET /pages/{page}

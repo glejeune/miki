@@ -88,6 +88,10 @@ mikiApp.directive('ngMarkdown', function () {
 mikiApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
+    when('/index', {
+      templateUrl: '/static/partial/index.html',
+      controller: 'IndexCtrl'
+    }).
     when('/page', {
       templateUrl: '/static/partial/page_list.html',
       controller: 'PageListCtrl'
@@ -109,7 +113,7 @@ mikiApp.config(['$routeProvider',
       controller: 'EditCtrl'
     }).
     otherwise({
-      redirectTo: '/page/index'
+      redirectTo: '/index'
     });
   }
 ]);

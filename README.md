@@ -21,6 +21,7 @@
 * [AngularJS](http://angularjs.org/)
 * [highlight.js](http://highlightjs.org/)
 * [marked](https://github.com/chjj/marked)
+* [bootstrap](http://getbootstrap.com/)
 
 ## Installation
 
@@ -51,6 +52,19 @@ Miki parameters :
 * `ip` : Interface to listen on (default : `0.0.0.0`)
 * `max_conn` : Maximum concurrent connections (default : `100`)
 * `key` : salt for password hashing
+* `index` : Name of the default (index) page. If this value is empty (default) the index page return the list of availables pages in the wiki.
+
+## Customize
+
+### 404, 500, ... pages
+
+You can customize your error page. To do so, create a page with name the error code. In such a page, you can use `{{page}}` and `{{error}}` which will be replaced by the desired page and the HTTP error code.
+
+### CSS
+
+**miki** use [bootstrap](http://getbootstrap.com/). Thus, you can use any bootstrap' theme you want. Just replace the CSS in the `index.html` file located in the `static` directory. 
+
+You can find many bootstrap' themes [here](http://bootswatch.com/). The default miki theme is [Journal](http://bootswatch.com/journal/). [Amelia](http://bootswatch.com/amelia/) is also present.
 
 ## APIs
 

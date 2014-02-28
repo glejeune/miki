@@ -42,6 +42,7 @@ routes() ->
   [
     {'_', [
       {"/", miki_handler, []},
+      {"/index", miki_index_handler, []},
       {"/config", miki_config_handler, []},
       {"/pages/[...]", miki_page_handler, []},
       {"/users", miki_user_handler, []},

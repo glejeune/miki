@@ -20,7 +20,7 @@ get-deps:
 
 clean:
 	@$(REBAR) clean
-	rm erl_crash.dump
+	rm -f erl_crash.dump
 
 realclean: clean
 	@$(REBAR) delete-deps
