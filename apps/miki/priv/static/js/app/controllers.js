@@ -176,6 +176,10 @@ mikiControllers.controller('AdminCtrl', function ($rootScope, $scope, $location,
       $scope.alerts = [{type: 'danger', msg: "Can't remove page "+page+"!"}];
     });
   };
+
+  $scope.edit_page = function(page) {
+    $location.path("/edit/" + page);
+  };
 });
 
 mikiControllers.controller('EditCtrl', function ($rootScope, $scope, $location, $http, $routeParams) {
