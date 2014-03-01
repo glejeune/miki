@@ -226,11 +226,11 @@ mikiControllers.controller('EditCtrl', function ($rootScope, $scope, $location, 
     $http({
       url: '/pages',
       method: "POST",
-      data: { "title": $scope.page_title, "content": $scope.page_content, "token": $rootScope.token },
+      data: { "title": removeDiacritics($scope.page_title), "content": $scope.page_content, "token": $rootScope.token },
       headers: {'Content-Type': 'application/json'}
     }).success(function(response) {
       if(view === true) {
-        $location.path("/page/" + $scope.page_title);
+        $location.path("/page/" + removeDiacritics($scope.page_title));
       } else {
         $scope.alerts = [{type: 'success', msg: "Page saved!"}];
         $scope.page_exist = true;
