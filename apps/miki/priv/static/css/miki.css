@@ -37,3 +37,18 @@ body {
   vertical-align: middle;
   text-align: center;
 }
+.miki-page {}
+.miki-page table {
+  width: 100%;
+  border: 1px dotted gray;
+  margin: 10px;
+  border-collapse: collapse;
+}
+.miki-page table th {
+  border: 1px dotted gray;
+  padding: 10px;
+}
+.miki-page table td {
+  border: 1px dotted gray;
+  padding: 10px;
+}
