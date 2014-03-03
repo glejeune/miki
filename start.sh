@@ -24,7 +24,7 @@ help() {
   echo "  -h --help        : Display this message"
 }
 
-while (( "$#" )); do
+while [ "$#" != 0 ]; do
   case $1 in
     -c|--console) 
       NOSHELL="" ;;
